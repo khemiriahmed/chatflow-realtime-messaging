@@ -1,0 +1,174 @@
+.inline-alert {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--cf-error);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-error-light);
+  color: var(--cf-error);
+  font-size: 13px;
+}
+
+.groups-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.groups-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.create-card h2,
+.groups-list h2 {
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.create-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.create-card button mat-spinner,
+.add-member button mat-spinner {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.groups-list {
+  padding: 20px;
+}
+
+.group-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid transparent;
+  border-radius: var(--cf-radius-md);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.group-item:hover,
+.group-item:focus-visible {
+  background: var(--cf-background);
+}
+
+.group-item--active {
+  border-color: rgba(56, 130, 246, 0.25);
+  background: var(--cf-primary-light);
+}
+
+.group-item > mat-icon {
+  color: var(--cf-primary);
+}
+
+.group-item__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.group-item__body strong {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.group-item__body span {
+  color: var(--cf-muted);
+  font-size: 11px;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--cf-accent-light);
+  color: var(--cf-accent);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.group-detail {
+  min-height: 420px;
+  padding: 24px;
+}
+
+.group-detail__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--cf-border);
+}
+
+.group-detail__header h2 {
+  font-size: 20px;
+}
+
+.section-title {
+  margin: 20px 0 12px;
+  font-size: 14px;
+}
+
+.member-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.member-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--cf-border);
+}
+
+.member-row__identity {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.member-row__identity strong {
+  font-size: 13px;
+}
+
+.member-row__identity span {
+  overflow: hidden;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.add-member {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.add-member mat-form-field {
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .groups-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

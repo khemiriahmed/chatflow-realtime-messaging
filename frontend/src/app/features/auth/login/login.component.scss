@@ -1,0 +1,143 @@
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--cf-background) 0%, var(--cf-primary-light) 100%);
+}
+
+.auth-card {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(340px, 1.1fr);
+  width: 100%;
+  max-width: 900px;
+  overflow: hidden;
+  border-radius: var(--cf-radius-lg) !important;
+  box-shadow: var(--cf-shadow) !important;
+}
+
+.auth-card__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 40px;
+  background: var(--cf-primary);
+  color: #FFFFFF;
+}
+
+.auth-card__intro h1 {
+  margin-top: 24px;
+  font-size: 30px;
+  letter-spacing: -0.03em;
+}
+
+.auth-card__intro p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.auth-card__features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+  font-size: 13px;
+}
+
+.auth-card__features span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auth-card__features mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.auth-card__form {
+  padding: 40px;
+}
+
+.auth-card__form h2 {
+  font-size: 24px;
+}
+
+.auth-card__subtitle {
+  margin: 4px 0 24px;
+  color: var(--cf-muted);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-alert {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--cf-error);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-error-light);
+  color: var(--cf-error);
+  font-size: 13px;
+}
+
+.form-alert--success {
+  border-color: var(--cf-success);
+  background: var(--cf-success-light);
+  color: var(--cf-success);
+}
+
+.submit-button {
+  height: 44px;
+  margin-top: 8px;
+  border-radius: var(--cf-radius-sm) !important;
+}
+
+.submit-button mat-spinner {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.auth-card__footer {
+  margin: 24px 0 0;
+  text-align: center;
+  color: var(--cf-muted);
+  font-size: 13px;
+}
+
+@media (max-width: 799px) {
+  .auth-card {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+  }
+
+  .auth-card__intro {
+    padding: 28px;
+  }
+
+  .auth-card__intro h1 {
+    margin-top: 8px;
+    font-size: 24px;
+  }
+
+  .auth-card__features {
+    display: none;
+  }
+
+  .auth-card__form {
+    padding: 28px;
+  }
+}

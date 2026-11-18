@@ -1,0 +1,84 @@
+<div class="cf-page">
+  <header class="cf-page-header">
+    <div>
+      <h1>Mon profil</h1>
+      <p class="cf-page-subtitle">Consultez et modifiez les informations de votre compte.</p>
+    </div>
+  </header>
+
+  <ng-container *ngIf="auth.currentUser$ | async as user">
+    <div class="profile-layout">
+      <section class="cf-card cf-card-body identity-card" aria-label="Identité">
+        <app-avatar [name]="user.name" [online]="user.online" size="lg"></app-avatar>
+        <h2>{{ user.name }}</h2>
+        <p class="cf-muted">{{ user.email }}</p>
+        <div class="identity-card__badges">
+          <span class="role-badge">{{ user.role === 'ADMIN' ? 'Administrateur' : 'Utilisateur' }}</span>
+          <span class="presence" [class.presence--online]="user.online">
+            <span class="presence__dot" aria-hidden="true"></span>
+            {{ user.online ? 'En ligne' : 'Hors ligne' }}
+          </span>
+        </div>
+        <button mat-stroked-button type="button" (click)="enableNotifications()">
+          <mat-icon>notifications_active</mat-icon>
+          Activer les notifications
+        </button>
+      </section>
+
+      <div class="profile-forms">
+        <section class="cf-card cf-card-body" aria-label="Modifier le profil">
+          <h2>Informations personnelles</h2>
+          <p class="cf-page-subtitle">Votre nom est visible par les autres utilisateurs.</p>
+
+          <div *ngIf="profileError" class="inline-alert" role="alert">{{ profileError }}</div>
+
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
+            <mat-form-field appearance="outline">
+              <mat-label>Nom complet</mat-label>
+              <input matInput type="text" formControlName="name" autocomplete="name">
+              <mat-error *ngIf="profileNameError">{{ profileNameError }}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Adresse e-mail</mat-label>
+              <input matInput type="email" [value]="user.email" disabled>
+              <mat-hint>L'adresse e-mail ne peut pas être modifiée.</mat-hint>
+            </mat-form-field>
+            <button mat-flat-button color="primary" type="submit" [disabled]="savingProfile">
+              <mat-spinner *ngIf="savingProfile" diameter="18"></mat-spinner>
+              {{ savingProfile ? 'Enregistrement…' : 'Enregistrer les modifications' }}
+            </button>
+          </form>
+        </section>
+
+        <section class="cf-card cf-card-body" aria-label="Changer le mot de passe">
+          <h2>Changer le mot de passe</h2>
+          <p class="cf-page-subtitle">Utilisez un mot de passe d'au moins 8 caractères.</p>
+
+          <div *ngIf="passwordError" class="inline-alert" role="alert">{{ passwordError }}</div>
+          <div *ngIf="passwordSuccess" class="inline-alert inline-alert--success" role="status">{{ passwordSuccess }}</div>
+
+          <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
+            <mat-form-field appearance="outline">
+              <mat-label>Mot de passe actuel</mat-label>
+              <input matInput type="password" formControlName="currentPassword" autocomplete="current-password">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Nouveau mot de passe</mat-label>
+              <input matInput type="password" formControlName="newPassword" autocomplete="new-password">
+              <mat-error *ngIf="newPasswordError">{{ newPasswordError }}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Confirmer le nouveau mot de passe</mat-label>
+              <input matInput type="password" formControlName="confirmPassword" autocomplete="new-password">
+              <mat-error *ngIf="confirmPasswordError">{{ confirmPasswordError }}</mat-error>
+            </mat-form-field>
+            <button mat-flat-button color="primary" type="submit" [disabled]="savingPassword">
+              <mat-spinner *ngIf="savingPassword" diameter="18"></mat-spinner>
+              {{ savingPassword ? 'Modification…' : 'Modifier le mot de passe' }}
+            </button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </ng-container>
+</div>

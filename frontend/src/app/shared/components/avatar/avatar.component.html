@@ -1,0 +1,9 @@
+<span class="avatar" [ngClass]="'avatar--' + size" [attr.aria-label]="ariaLabel" role="img">
+  <span class="avatar__initials">{{ name | initials }}</span>
+  <span
+    *ngIf="showPresence && online !== null"
+    class="avatar__presence"
+    [class.avatar__presence--online]="online"
+    [attr.aria-label]="online ? 'En ligne' : 'Hors ligne'"
+  ></span>
+</span>

@@ -1,0 +1,155 @@
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px;
+}
+
+.stat-card mat-icon {
+  color: var(--cf-primary);
+}
+
+.stat-card--success mat-icon {
+  color: var(--cf-success);
+}
+
+.stat-card--accent mat-icon {
+  color: var(--cf-accent);
+}
+
+.stat-card__value {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.stat-card__label {
+  color: var(--cf-muted);
+  font-size: 12px;
+}
+
+.admin-card {
+  padding: 24px;
+}
+
+.admin-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.admin-card__header h2 {
+  font-size: 18px;
+}
+
+.admin-card__search {
+  width: min(320px, 40vw);
+}
+
+.inline-alert {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--cf-error);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-error-light);
+  color: var(--cf-error);
+  font-size: 13px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th,
+.users-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--cf-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.users-table th {
+  color: var(--cf-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-cell div {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-cell strong {
+  font-size: 13px;
+}
+
+.user-cell span {
+  color: var(--cf-muted);
+  font-size: 11px;
+}
+
+.users-table mat-form-field {
+  min-width: 150px;
+}
+
+.status-badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--cf-error-light);
+  color: var(--cf-error);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-badge--active {
+  background: var(--cf-success-light);
+  color: var(--cf-success);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+  font-size: 12px;
+}
+
+.pagination__actions {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 799px) {
+  .admin-card__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-card__search {
+    width: 100%;
+  }
+}
