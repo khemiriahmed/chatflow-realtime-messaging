@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:chatflow;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: false
+
+jwt:
+  secret: Y2hhdGZsb3ctZGV2ZWxvcG1lbnQtc2VjcmV0LWtleS1jaGFuZ2UtbWUtMjAyNg==
+  access-expiration: 900s
+  refresh-expiration: 7d
+  issuer: chatflow
+  audience: chatflow-web
+
+cors:
+  allowed-origins: http://localhost:4200,http://localhost
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
