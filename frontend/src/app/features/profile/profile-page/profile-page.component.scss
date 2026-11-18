@@ -1,0 +1,103 @@
+.profile-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.identity-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.identity-card h2 {
+  margin-top: 8px;
+  font-size: 18px;
+}
+
+.identity-card p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.identity-card__badges {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+.role-badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--cf-accent-light);
+  color: var(--cf-accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.presence {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cf-muted);
+  font-size: 12px;
+}
+
+.presence__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cf-muted);
+}
+
+.presence--online {
+  color: var(--cf-success);
+}
+
+.presence--online .presence__dot {
+  background: var(--cf-success);
+}
+
+.profile-forms {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-forms h2 {
+  font-size: 16px;
+}
+
+.profile-forms form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.inline-alert {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--cf-error);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-error-light);
+  color: var(--cf-error);
+  font-size: 13px;
+}
+
+.inline-alert--success {
+  border-color: var(--cf-success);
+  background: var(--cf-success-light);
+  color: var(--cf-success);
+}
+
+@media (max-width: 900px) {
+  .profile-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

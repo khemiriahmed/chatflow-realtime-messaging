@@ -1,0 +1,145 @@
+<mat-sidenav-container class="app-shell">
+  <mat-sidenav
+    class="app-sidenav"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <div class="brand">
+      <mat-icon class="brand__icon" aria-hidden="true">forum</mat-icon>
+      <span class="brand__name">ChatFlow</span>
+    </div>
+
+    <mat-nav-list class="navigation">
+      <a mat-list-item routerLink="/chat" routerLinkActive="navigation__link--active" (click)="closeSidenavOnHandset()">
+        <mat-icon matListItemIcon aria-hidden="true">chat</mat-icon>
+        <span matListItemTitle>Messagerie</span>
+      </a>
+      <a mat-list-item routerLink="/contacts" routerLinkActive="navigation__link--active" (click)="closeSidenavOnHandset()">
+        <mat-icon matListItemIcon aria-hidden="true">people</mat-icon>
+        <span matListItemTitle>Contacts</span>
+      </a>
+      <a mat-list-item routerLink="/groups" routerLinkActive="navigation__link--active" (click)="closeSidenavOnHandset()">
+        <mat-icon matListItemIcon aria-hidden="true">groups</mat-icon>
+        <span matListItemTitle>Groupes</span>
+      </a>
+      <a mat-list-item routerLink="/profile" routerLinkActive="navigation__link--active" (click)="closeSidenavOnHandset()">
+        <mat-icon matListItemIcon aria-hidden="true">person</mat-icon>
+        <span matListItemTitle>Mon profil</span>
+      </a>
+      <a
+        *ngIf="auth.isAdmin"
+        mat-list-item
+        routerLink="/admin"
+        routerLinkActive="navigation__link--active"
+        (click)="closeSidenavOnHandset()"
+      >
+        <mat-icon matListItemIcon aria-hidden="true">admin_panel_settings</mat-icon>
+        <span matListItemTitle>Administration</span>
+      </a>
+    </mat-nav-list>
+
+    <div class="sidenav-footer">
+      <mat-icon aria-hidden="true">lock</mat-icon>
+      <span>Messagerie sécurisée</span>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="app-toolbar" color="primary">
+      <button
+        *ngIf="isHandset$ | async"
+        mat-icon-button
+        type="button"
+        aria-label="Ouvrir la navigation"
+        (click)="sidenav?.toggle()"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <button *ngIf="isBackVisible" mat-icon-button type="button" aria-label="Retour à la liste" routerLink="/chat">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <span class="toolbar__title">ChatFlow</span>
+      <span class="cf-spacer"></span>
+
+      <form class="toolbar__search" role="search" (ngSubmit)="onSearch()">
+        <mat-icon aria-hidden="true">search</mat-icon>
+        <input
+          type="search"
+          [formControl]="searchControl"
+          placeholder="Rechercher un contact"
+          aria-label="Rechercher un contact"
+        >
+      </form>
+
+      <span
+        class="connection"
+        [class.connection--online]="(ws.connected$ | async) === true"
+        [matTooltip]="(ws.connected$ | async) ? 'Connexion temps réel active' : 'Connexion temps réel inactive'"
+        [attr.aria-label]="(ws.connected$ | async) ? 'Connecté' : 'Hors ligne'"
+      >
+        <span class="connection__dot" aria-hidden="true"></span>
+        <span class="connection__label">{{ (ws.connected$ | async) ? 'Connecté' : 'Hors ligne' }}</span>
+      </span>
+
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Notifications"
+        [matMenuTriggerFor]="notificationMenu"
+      >
+        <mat-icon [matBadge]="notificationCount" [matBadgeHidden]="notificationCount === 0" matBadgeColor="warn" matBadgeSize="small">
+          notifications
+        </mat-icon>
+      </button>
+      <mat-menu #notificationMenu="matMenu">
+        <button
+          mat-menu-item
+          type="button"
+          *ngFor="let notification of notifications"
+          (click)="openNotification(notification)"
+        >
+          <mat-icon aria-hidden="true">message</mat-icon>
+          <span>{{ notification.message }}</span>
+        </button>
+        <button mat-menu-item type="button" disabled *ngIf="notifications.length === 0">
+          Aucune notification
+        </button>
+      </mat-menu>
+
+      <button mat-button type="button" class="user-menu" [matMenuTriggerFor]="userMenu" aria-label="Menu utilisateur">
+        <app-avatar
+          [name]="(auth.currentUser$ | async)?.name ?? 'Utilisateur'"
+          [online]="(auth.currentUser$ | async)?.online ?? null"
+          [size]="'sm'"
+          [showPresence]="false"
+        ></app-avatar>
+        <span class="user-menu__name">{{ (auth.currentUser$ | async)?.name }}</span>
+        <mat-icon aria-hidden="true">expand_more</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item type="button" routerLink="/profile">
+          <mat-icon aria-hidden="true">person</mat-icon>
+          <span>Mon profil</span>
+        </button>
+        <button mat-menu-item type="button" routerLink="/groups">
+          <mat-icon aria-hidden="true">groups</mat-icon>
+          <span>Groupes</span>
+        </button>
+        <button *ngIf="auth.isAdmin" mat-menu-item type="button" routerLink="/admin">
+          <mat-icon aria-hidden="true">admin_panel_settings</mat-icon>
+          <span>Administration</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item type="button" (click)="logout()">
+          <mat-icon aria-hidden="true">logout</mat-icon>
+          <span>Se déconnecter</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <main class="app-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

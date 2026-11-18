@@ -1,0 +1,70 @@
+<div class="cf-page">
+  <header class="cf-page-header">
+    <div>
+      <h1>Contacts</h1>
+      <p class="cf-page-subtitle">Recherchez un utilisateur et démarrez une conversation privée.</p>
+    </div>
+  </header>
+
+  <section class="cf-card search-card" aria-label="Recherche de contacts">
+    <mat-form-field appearance="outline">
+      <mat-label>Rechercher un contact</mat-label>
+      <input matInput type="search" [formControl]="searchControl" placeholder="Nom ou adresse e-mail" aria-label="Nom ou adresse e-mail">
+      <mat-icon matSuffix aria-hidden="true">search</mat-icon>
+    </mat-form-field>
+  </section>
+
+  <div *ngIf="errorMessage" class="inline-alert" role="alert">{{ errorMessage }}</div>
+
+  <app-loading-state *ngIf="loading" label="Recherche des contacts…"></app-loading-state>
+
+  <ng-container *ngIf="!loading">
+    <app-empty-state
+      *ngIf="users.length === 0"
+      icon="person_search"
+      title="Aucun contact trouvé"
+      message="Essayez un autre nom ou une autre adresse e-mail."
+    ></app-empty-state>
+
+    <div *ngIf="users.length > 0" class="contacts-grid">
+      <article *ngFor="let user of users; trackBy: trackByUser" class="cf-card contact-card">
+        <div class="contact-card__identity">
+          <app-avatar [name]="user.name" [online]="user.online" size="lg"></app-avatar>
+          <div class="contact-card__details">
+            <h2>{{ user.name }}</h2>
+            <p class="cf-muted">{{ user.email }}</p>
+            <span class="presence" [class.presence--online]="user.online">
+              <span class="presence__dot" aria-hidden="true"></span>
+              {{ user.online ? 'En ligne' : 'Hors ligne' }}
+            </span>
+          </div>
+        </div>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          [disabled]="isStarting(user)"
+          [attr.aria-label]="'Démarrer une conversation avec ' + user.name"
+          (click)="startConversation(user)"
+        >
+          <mat-spinner *ngIf="isStarting(user)" diameter="18"></mat-spinner>
+          <mat-icon *ngIf="!isStarting(user)">chat</mat-icon>
+          {{ isStarting(user) ? 'Création…' : 'Démarrer une conversation' }}
+        </button>
+      </article>
+    </div>
+
+    <div *ngIf="users.length > 0" class="pagination">
+      <span class="cf-muted">{{ totalElements }} contact{{ totalElements > 1 ? 's' : '' }} · {{ pageLabel }}</span>
+      <div class="pagination__actions">
+        <button mat-stroked-button type="button" [disabled]="page === 0" (click)="changePage(-1)" aria-label="Page précédente">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button mat-stroked-button type="button" [disabled]="totalPages === 0 || page >= totalPages - 1" (click)="changePage(1)" aria-label="Page suivante">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</div>

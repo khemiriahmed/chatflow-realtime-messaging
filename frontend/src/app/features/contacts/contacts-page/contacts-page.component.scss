@@ -1,0 +1,95 @@
+.search-card {
+  padding: 12px 20px;
+  margin-bottom: 20px;
+}
+
+.inline-alert {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--cf-error);
+  border-radius: var(--cf-radius-sm);
+  background: var(--cf-error-light);
+  color: var(--cf-error);
+  font-size: 13px;
+}
+
+.contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px;
+}
+
+.contact-card__identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.contact-card__details {
+  min-width: 0;
+}
+
+.contact-card__details h2 {
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-card__details p {
+  margin: 2px 0 8px;
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.presence {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cf-muted);
+  font-size: 12px;
+}
+
+.presence__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cf-muted);
+}
+
+.presence--online {
+  color: var(--cf-success);
+}
+
+.presence--online .presence__dot {
+  background: var(--cf-success);
+}
+
+.contact-card button mat-spinner {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+  font-size: 12px;
+}
+
+.pagination__actions {
+  display: flex;
+  gap: 8px;
+}

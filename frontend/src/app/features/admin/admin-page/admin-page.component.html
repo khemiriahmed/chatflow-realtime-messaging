@@ -1,0 +1,104 @@
+<div class="cf-page">
+  <header class="cf-page-header">
+    <div>
+      <h1>Administration</h1>
+      <p class="cf-page-subtitle">Gérez les comptes utilisateurs et consultez les indicateurs de ChatFlow.</p>
+    </div>
+  </header>
+
+  <section class="stats-grid" aria-label="Indicateurs">
+    <app-loading-state *ngIf="loadingStats" label="Chargement des indicateurs…"></app-loading-state>
+    <article *ngFor="let card of statsCards" class="cf-card stat-card" [ngClass]="'stat-card--' + card.tone">
+      <mat-icon aria-hidden="true">{{ card.icon }}</mat-icon>
+      <span class="stat-card__value">{{ card.value }}</span>
+      <span class="stat-card__label">{{ card.label }}</span>
+    </article>
+  </section>
+
+  <section class="cf-card admin-card" aria-label="Utilisateurs">
+    <header class="admin-card__header">
+      <div>
+        <h2>Utilisateurs</h2>
+        <p class="cf-page-subtitle">{{ totalElements }} compte{{ totalElements > 1 ? 's' : '' }} · {{ pageLabel }}</p>
+      </div>
+      <mat-form-field appearance="outline" class="admin-card__search">
+        <mat-label>Rechercher</mat-label>
+        <input matInput type="search" [formControl]="searchControl" placeholder="Nom ou e-mail">
+        <mat-icon matSuffix aria-hidden="true">search</mat-icon>
+      </mat-form-field>
+    </header>
+
+    <div *ngIf="errorMessage" class="inline-alert" role="alert">{{ errorMessage }}</div>
+
+    <app-loading-state *ngIf="loadingUsers" label="Chargement des utilisateurs…"></app-loading-state>
+
+    <ng-container *ngIf="!loadingUsers">
+      <app-empty-state
+        *ngIf="users.length === 0"
+        icon="people"
+        title="Aucun utilisateur"
+        message="Aucun compte ne correspond à votre recherche."
+      ></app-empty-state>
+
+      <div *ngIf="users.length > 0" class="table-wrapper">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th scope="col">Utilisateur</th>
+              <th scope="col">Rôle</th>
+              <th scope="col">Statut</th>
+              <th scope="col">Actif</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users; trackBy: trackByUser">
+              <td>
+                <div class="user-cell">
+                  <app-avatar [name]="user.name" [online]="user.online" size="sm"></app-avatar>
+                  <div>
+                    <strong>{{ user.name }}</strong>
+                    <span>{{ user.email }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                  <mat-label>Rôle</mat-label>
+                  <mat-select [value]="user.role" (selectionChange)="changeRole(user, $event.value)" aria-label="Rôle de l'utilisateur">
+                    <mat-option value="USER">Utilisateur</mat-option>
+                    <mat-option value="ADMIN">Administrateur</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+              <td>
+                <span class="status-badge" [class.status-badge--active]="user.enabled">
+                  {{ user.enabled ? 'Actif' : 'Désactivé' }}
+                </span>
+              </td>
+              <td>
+                <mat-slide-toggle
+                  [checked]="user.enabled"
+                  [disabled]="user.id === auth.currentUser?.id"
+                  (change)="toggleStatus(user, $event.checked)"
+                  [attr.aria-label]="'Activer ou désactiver ' + user.name"
+                ></mat-slide-toggle>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="users.length > 0" class="pagination">
+        <span class="cf-muted">{{ pageLabel }}</span>
+        <div class="pagination__actions">
+          <button mat-stroked-button type="button" [disabled]="page === 0" (click)="changePage(-1)" aria-label="Page précédente">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button mat-stroked-button type="button" [disabled]="totalPages === 0 || page >= totalPages - 1" (click)="changePage(1)" aria-label="Page suivante">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </section>
+</div>

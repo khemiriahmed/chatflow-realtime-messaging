@@ -1,0 +1,16 @@
+<div class="message-row" [class.message-row--sent]="sent">
+  <div
+    class="bubble"
+    [class.bubble--sent]="sent"
+    [attr.aria-label]="(sent ? 'Message envoyé' : 'Message reçu') + ' de ' + message.senderName"
+  >
+    <div *ngIf="showAuthor && !sent" class="bubble__author">{{ message.senderName }}</div>
+    <div class="bubble__content">{{ message.content }}</div>
+    <div class="bubble__meta">
+      <time [attr.datetime]="message.createdAt">{{ message.createdAt | time }}</time>
+      <mat-icon *ngIf="sent" class="bubble__status" [class.bubble__status--read]="message.status === 'READ'" [attr.aria-label]="statusLabel">
+        {{ statusIcon }}
+      </mat-icon>
+    </div>
+  </div>
+</div>

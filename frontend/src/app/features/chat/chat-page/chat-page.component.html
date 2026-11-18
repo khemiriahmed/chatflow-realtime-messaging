@@ -1,0 +1,168 @@
+<div class="chat-page" [class.chat-page--active]="activeConversationId !== null">
+  <section class="conversation-panel" aria-label="Liste des conversations">
+    <header class="panel-header">
+      <div>
+        <h1>Conversations</h1>
+        <p class="panel-header__subtitle">Vos échanges récents</p>
+      </div>
+      <div class="panel-actions">
+        <button mat-icon-button type="button" matTooltip="Rechercher des contacts" aria-label="Rechercher des contacts" (click)="openContacts()">
+          <mat-icon>person_search</mat-icon>
+        </button>
+        <button mat-icon-button type="button" matTooltip="Gérer les groupes" aria-label="Gérer les groupes" (click)="openGroups()">
+          <mat-icon>groups</mat-icon>
+        </button>
+      </div>
+    </header>
+
+    <div class="conversation-search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input type="search" [formControl]="searchControl" placeholder="Rechercher une conversation" aria-label="Rechercher une conversation">
+    </div>
+
+    <div class="filters" role="group" aria-label="Filtrer les conversations">
+      <button type="button" [class.filters__button--active]="isFilterActive('ALL')" (click)="setFilter('ALL')">Toutes</button>
+      <button type="button" [class.filters__button--active]="isFilterActive('PRIVATE')" (click)="setFilter('PRIVATE')">Privées</button>
+      <button type="button" [class.filters__button--active]="isFilterActive('GROUP')" (click)="setFilter('GROUP')">Groupes</button>
+    </div>
+
+    <div *ngIf="errorMessage" class="inline-alert" role="alert">{{ errorMessage }}</div>
+
+    <app-loading-state *ngIf="loadingConversations" label="Chargement des conversations…"></app-loading-state>
+
+    <ng-container *ngIf="!loadingConversations && (conversations$ | async) as conversations">
+      <app-empty-state
+        *ngIf="conversations.length === 0"
+        icon="chat_bubble_outline"
+        title="Aucune conversation"
+        message="Démarrez une discussion depuis la liste des contacts ou créez un groupe."
+      >
+        <button mat-flat-button color="primary" type="button" (click)="openContacts()">Trouver des contacts</button>
+      </app-empty-state>
+
+      <div *ngIf="conversations.length > 0" class="conversation-list">
+        <button
+          *ngFor="let conversation of conversations; trackBy: trackByConversation"
+          type="button"
+          class="conversation-item"
+          [class.conversation-item--active]="conversation.id === activeConversationId"
+          [attr.aria-label]="'Ouvrir la conversation ' + conversationLabel(conversation)"
+          (click)="openConversation(conversation)"
+        >
+          <app-avatar [name]="conversationLabel(conversation)" [online]="contactOnline(conversation)"></app-avatar>
+          <span class="conversation-item__body">
+            <span class="conversation-item__line">
+              <strong>{{ conversationLabel(conversation) }}</strong>
+              <time [attr.datetime]="conversation.updatedAt">{{ conversation.updatedAt | timeAgo }}</time>
+            </span>
+            <span class="conversation-item__line conversation-item__line--secondary">
+              <span class="conversation-item__preview">{{ conversationPreview(conversation) }}</span>
+              <span *ngIf="conversation.unreadCount > 0" class="unread-badge" [attr.aria-label]="conversation.unreadCount + ' messages non lus'">
+                {{ conversation.unreadCount }}
+              </span>
+            </span>
+            <span class="conversation-item__type">
+              <mat-icon aria-hidden="true">{{ conversation.type === 'GROUP' ? 'groups' : 'person' }}</mat-icon>
+              {{ conversationSubtitle(conversation) }}
+            </span>
+          </span>
+        </button>
+      </div>
+    </ng-container>
+  </section>
+
+  <section class="thread-panel" aria-label="Fil de discussion">
+    <ng-container *ngIf="activeConversation as conversation; else noConversation">
+      <header class="thread-header">
+        <button mat-icon-button type="button" class="thread-header__back" routerLink="/chat" aria-label="Retour à la liste des conversations">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <app-avatar [name]="conversationLabel(conversation)" [online]="contactOnline(conversation)"></app-avatar>
+        <div class="thread-header__identity">
+          <h2>{{ conversationLabel(conversation) }}</h2>
+          <p>
+            <span class="presence-dot" [class.presence-dot--online]="conversationSubtitle(conversation) === 'En ligne'"></span>
+            {{ conversationSubtitle(conversation) }}
+          </p>
+        </div>
+        <span class="cf-spacer"></span>
+        <button
+          *ngIf="conversation.type === 'GROUP'"
+          mat-icon-button
+          type="button"
+          aria-label="Paramètres du groupe"
+          [matMenuTriggerFor]="groupMenu"
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #groupMenu="matMenu">
+          <button mat-menu-item type="button" (click)="openGroups()">
+            <mat-icon aria-hidden="true">group_add</mat-icon>
+            <span>Gérer les membres</span>
+          </button>
+        </mat-menu>
+      </header>
+
+      <div #thread class="thread" role="log" aria-live="polite" aria-label="Historique des messages">
+        <div *ngIf="hasOlderMessages" class="load-older">
+          <button mat-stroked-button type="button" [disabled]="loadingOlder" (click)="loadOlderMessages()">
+            {{ loadingOlder ? 'Chargement…' : 'Charger les messages précédents' }}
+          </button>
+        </div>
+
+        <app-loading-state *ngIf="loadingMessages" label="Chargement des messages…"></app-loading-state>
+
+        <app-empty-state
+          *ngIf="!loadingMessages && messages.length === 0"
+          icon="chat_bubble_outline"
+          title="Aucun message"
+          message="Envoyez le premier message de cette conversation."
+        ></app-empty-state>
+
+        <app-message-bubble
+          *ngFor="let message of messages; trackBy: trackByMessage"
+          [message]="message"
+          [sent]="message.senderId === currentUserId"
+          [showAuthor]="conversation.type === 'GROUP'"
+        ></app-message-bubble>
+
+        <div *ngIf="typing" class="typing" role="status">
+          <span class="typing__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>{{ typingLabel }}</span>
+        </div>
+      </div>
+
+      <form class="composer" (ngSubmit)="sendMessage()">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Message</mat-label>
+          <textarea
+            matInput
+            rows="1"
+            [formControl]="composerControl"
+            [attr.aria-label]="'Message pour ' + conversationLabel(conversation)"
+            [placeholder]="'Écrire à ' + conversationLabel(conversation) + '…'"
+            (keydown.enter)="onEnter($event)"
+            (input)="onComposerInput(composerControl.value)"
+          ></textarea>
+          <mat-error *ngIf="composerControl.hasError('maxlength')">Le message ne peut pas dépasser 4000 caractères.</mat-error>
+        </mat-form-field>
+        <div class="composer__actions">
+          <span class="character-counter" [class.character-counter--warning]="remainingCharacters < 200">
+            {{ remainingCharacters }}
+          </span>
+          <button mat-flat-button color="primary" type="submit" [disabled]="!canSendMessage" aria-label="Envoyer le message">
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
+      </form>
+    </ng-container>
+
+    <ng-template #noConversation>
+      <div class="thread-empty">
+        <mat-icon aria-hidden="true">forum</mat-icon>
+        <h2>Sélectionnez une conversation</h2>
+        <p>Choisissez une discussion à gauche pour lire et envoyer des messages.</p>
+      </div>
+    </ng-template>
+  </section>
+</div>
